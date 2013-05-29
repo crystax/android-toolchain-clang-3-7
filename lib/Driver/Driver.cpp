@@ -2208,6 +2208,11 @@ const ToolChain &Driver::getToolChain(const ArgList &Args,
     case llvm::Triple::NaCl:
       TC = new toolchains::NaCl_TC(*this, Target, Args);
       break;
+    case llvm::Triple::NDK:
+      if (Target.getArch() == llvm::Triple::le32)
+        TC = new toolchains::NDKClang(*this, Target, Args);
+      assert(TC && "Unexpected target arch for NDK toolchain");
+      break;
     case llvm::Triple::Solaris:
       TC = new toolchains::Solaris(*this, Target, Args);
       break;
