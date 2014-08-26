@@ -6905,6 +6905,8 @@ public:
 
 AndroidNDKTargetInfo::AndroidNDKTargetInfo(const llvm::Triple& Triple)
     : TargetInfo(Triple) {
+  UserLabelPrefix = "";
+
   BigEndian = false;
   NoAsmVariants = true;
 
