@@ -384,7 +384,6 @@ protected:
     // Linux defines; list based off of gcc output
     DefineStd(Builder, "unix", Opts);
     DefineStd(Builder, "linux", Opts);
-    Builder.defineMacro("__gnu_linux__");
     Builder.defineMacro("__ELF__");
     if (Triple.getEnvironment() == llvm::Triple::Android) {
       Builder.defineMacro("__ANDROID__", "1");
@@ -393,6 +392,10 @@ protected:
       Triple.getEnvironmentVersion(Maj, Min, Rev);
       this->PlatformName = "android";
       this->PlatformMinVersion = VersionTuple(Maj, Min, Rev);
+    }
+    else
+    {
+      Builder.defineMacro("__gnu_linux__");
     }
     if (Opts.POSIXThreads)
       Builder.defineMacro("_REENTRANT");
@@ -6927,7 +6930,6 @@ void AndroidNDKTargetInfo::getTargetDefines(const LangOptions& Opts,
                                          MacroBuilder& Builder) const {
   DefineStd(Builder, "unix", Opts);
   DefineStd(Builder, "linux", Opts);
-  Builder.defineMacro("__gnu_linux__");
   Builder.defineMacro("__ELF__");
   Builder.defineMacro("__LITTLE_ENDIAN__");
   if (Opts.POSIXThreads)
