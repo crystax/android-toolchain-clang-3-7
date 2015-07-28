@@ -4130,7 +4130,13 @@ void Clang::ConstructJob(Compilation &C, const JobAction &JA,
   Args.AddLastArg(CmdArgs, options::OPT_fstandalone_debug);
   Args.AddLastArg(CmdArgs, options::OPT_fno_standalone_debug);
   Args.AddLastArg(CmdArgs, options::OPT_fno_operator_names);
-  // AltiVec-like language extensions aren't relevant for assembling.
+  // Emulated TLS is enabled by default on Android, and can be enabled manually
+  // with -femulated-tls.
+  bool EmulatedTLSDefault = Triple.getEnvironment() == llvm::Triple::Android;
+  if (Args.hasFlag(options::OPT_femulated_tls, options::OPT_fno_emulated_tls,
+                   EmulatedTLSDefault))
+    CmdArgs.push_back("-femulated-tls");
+  // AltiVec language extensions aren't relevant for assembling.
   if (!isa<PreprocessJobAction>(JA) || Output.getType() != types::TY_PP_Asm) {
     Args.AddLastArg(CmdArgs, options::OPT_faltivec);
     Args.AddLastArg(CmdArgs, options::OPT_fzvector);
