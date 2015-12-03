@@ -3355,7 +3355,7 @@ Linux::Linux(const Driver &D, const llvm::Triple &Triple, const ArgList &Args)
     addPathIfExists((GCCInstallation.getInstallPath() + Multilib.gccSuffix()),
                     Paths);
 
-    if (IsAndroid) {
+    if (IsAndroid && (Arch != llvm::Triple::mips64el)) {
       // Add libstdc++ path
       const std::string LibstdcppPath = getDriver().Dir + "/../" +
                                         GCCTriple.str() + "/lib" +
@@ -3397,6 +3397,14 @@ Linux::Linux(const Driver &D, const llvm::Triple &Triple, const ArgList &Args)
     if (StringRef(LibPath).startswith(SysRoot)) {
       addPathIfExists(LibPath + "/" + MultiarchTriple, Paths);
       addPathIfExists(LibPath + "/../" + OSLibDir, Paths);
+    }
+
+    if (IsAndroid && (Arch == llvm::Triple::mips64el)) {
+      // Add libstdc++ path
+      const std::string LibstdcppPath = getDriver().Dir + "/../" +
+                                        GCCTriple.str() + "/lib" +
+                                        Multilib.gccSuffix();
+      addPathIfExists(LibstdcppPath, Paths);
     }
   }
 
